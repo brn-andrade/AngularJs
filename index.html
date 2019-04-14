@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="listaTelefonica">
+
+<head>
+    <!-- scripts -->
+    <script src="lib/angular.min.js"></script>
+
+    <!-- styles -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    </link>
+
+
+    <style>
+        .selecionado {
+            background: yellowgreen !important;
+        }
+    </style>
+
+    <script type="text/javascript">
+        const app = angular.module("listaTelefonica", []);
+        app.controller("listaTelefonicaController", function ($scope) {
+
+            $scope.contatos = [
+                { nome: "Pedro", telefone: "999999999", tipo: 'Celular' },
+                { nome: "Andre", telefone: "999999456", tipo: 'Celular' },
+                { nome: "Maria", telefone: "123456789", tipo: 'Celular' },
+                { nome: "Ana", telefone: "33333333", tipo: 'Fixo' }
+            ];
+
+            $scope.tipos = [
+                { nome: 'Celular', value: 1 },
+                { nome: 'Fixo', value: 2 },
+                { nome: 'WhatsApp', value: 3 },
+            ];
+
+            $scope.adicionarContato = (contato) => {
+                $scope.contatos.push(angular.copy(contato));
+                delete $scope.contato;
+            }
+            $scope.apagarContatos = () => {
+                $scope.contatos = $scope.contatos.filter((contato) => {
+                    return !contato.selecionado;
+                });
+            }
+            $scope.temContatoSelecionado = () => {
+                const seleciondados = $scope.contatos.filter((contato) => {
+                    return contato.selecionado;
+                });
+                if (seleciondados.length) return true
+                return false
+            }
+        });
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>AngularJs</title>
+</head>
+
+<body>
+    <div ng-controller="listaTelefonicaController">
+
+        <div class="container">
+            <div class="jumbotron">
+                <table class="table table-bordered table-light  table-striped table-borderless">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-class="{selecionado: contato.selecionado}" ng-repeat="contato in contatos">
+                            <td><input type="checkbox" ng-model="contato.selecionado"></td>
+                            <td>{{contato.nome}}</td>
+                            <td>{{contato.telefone}}</td>
+                            <td>{{contato.tipo}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input id="name" class="form-control" type="text" ng-model="contato.nome" ng-required="true">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input id="phone" class="form-control" type="tel" ng-model="contato.telefone">
+                </div>
+                <div class="form-group">
+                    <label for="type">Tipo</label>
+                    <select class="form-control" id="type" ng-model="contato.tipo"
+                        ng-options="tipo.nome as tipo.nome for tipo in tipos">
+                        <option value="">Selecione um tipo de contato</option>
+                    </select>
+                </div>
+
+                <div class="text-center mt-5">
+                    <button ng-disabled="!contato.nome || !contato.telefone || !contato.tipo" ng-click="adicionarContato(contato)"
+                        type="button" class="btn btn-primary">Salvar</button>
+                    <button ng-if="temContatoSelecionado()" class="btn btn-danger" ng-click="apagarContatos()"
+                        type="button">Apagar
+                        Selecionados</button>
+                </div>
+
+                <pre>
+                    {{contato}}
+                </pre>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<div ng-include="'footer.html'"></div>
+
+</div>
+
+</html>
